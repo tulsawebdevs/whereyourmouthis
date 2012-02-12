@@ -3,6 +3,10 @@ import os
 import sys
 import urlparse
 
+ROOT = os.path.dirname(os.path.abspath(__file__))
+path = lambda *a: os.path.join(ROOT, *a)
+ROOT_PACKAGE = os.path.basename(ROOT)
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -136,12 +140,18 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'wymi.urls'
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.facebook.FacebookBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+ROOT_URLCONF = '%s.urls' % ROOT_PACKAGE
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    path('templates'),
 )
 
 INSTALLED_APPS = (
@@ -155,6 +165,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'south',
     'tastypie',
+    'social_auth',
 
     'inspections',
 )
@@ -181,3 +192,19 @@ LOGGING = {
         },
     }
 }
+
+SOCIAL_AUTH_ENABLED_BACKENDS = ('facebook')
+try:
+    if 'FACEBOOK_APP_ID' in os.environ:
+        FACEBOOK_APP_ID = os.environ['FACEBOOK_APP_ID']
+
+    if 'FACEBOOK_API_SECRET' in os.environ:
+        FACEBOOK_API_SECRET = os.environ['FACEBOOK_API_SECRET']
+except Exception:
+    print 'Unexpected error:', sys.exc_info()
+LOGIN_URL          = '/login-form/'
+LOGIN_REDIRECT_URL = '/logged-in/'
+LOGIN_ERROR_URL    = '/login-error/'
+SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
+SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
+SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
