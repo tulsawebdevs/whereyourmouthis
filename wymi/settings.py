@@ -200,11 +200,12 @@ try:
 
     if 'FACEBOOK_API_SECRET' in os.environ:
         FACEBOOK_API_SECRET = os.environ['FACEBOOK_API_SECRET']
+
+    FACEBOOK_EXTENDED_PERMISSIONS = ['user_checkins']
 except Exception:
     print 'Unexpected error:', sys.exc_info()
-LOGIN_URL          = '/login-form/'
-LOGIN_REDIRECT_URL = '/logged-in/'
-LOGIN_ERROR_URL    = '/login-error/'
+LOGIN_REDIRECT_URL = "/"
 SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
+SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
