@@ -5,7 +5,7 @@
 <body>
   {% if user.is_authenticated %}
     Thanks for signing up, {{ user.first_name|default:user.username }}
-  {% elif %}
+  {% else %}
     <a href="{% url socialauth_begin 'facebook' %}">Sign in with Facebook</a>
   {% endif %}
 </body>
