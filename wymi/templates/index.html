@@ -3,6 +3,10 @@
 <title>WhereYourMouth.is</title>
 </head>
 <body>
-<a href="{% url socialauth_begin 'facebook' %}">Sign in with Facebook</a>
+  {% if user.is_authenticated %}
+    Thanks for signing up, {{ user.first_name|default:user.username }}
+  {% elif %}
+    <a href="{% url socialauth_begin 'facebook' %}">Sign in with Facebook</a>
+  {% endif %}
 </body>
 </html>
