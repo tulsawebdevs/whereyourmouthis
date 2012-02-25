@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{% block title %}{% endblock %}</title>
+<meta name="viewport" content="width-device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="Luke Crouch">
+
+<link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+<!--[if lt IE 9]>
+  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+
+<body>
+  <div class="navbar navbar-fixed-top">
+  </div>
+  <div class="container">
+    {% block content %}{% endblock %}
+    {% block footer %}
+    <footer>
+      <p>&copy; WhereYourMouth.is 2012</p>
+    </footer>
+    {% endblock %}
+  </div>
+
+</body>
+</html>
