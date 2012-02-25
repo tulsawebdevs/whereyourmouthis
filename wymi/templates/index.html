@@ -7,7 +7,9 @@
       <h1>WhereYourMouth.is</h1>
       <p>Spend your money at clean and green restaurants.</p>
     {% if user.is_authenticated %}
-      <h3>Thanks for signing up, {{ user.first_name|default:user.username }}</h3>
+      <div class="alert alert-success">
+        <h3>Thanks for signing up, {{ user.first_name|default:user.username }}</h3>
+      </div>
     {% else %}
     <p><a href="{% url socialauth_begin 'facebook' %}"><img src="{{ STATIC_URL }}img/facebook_signin.png" /></a></p>
     {% endif %}
