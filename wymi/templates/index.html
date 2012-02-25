@@ -1,12 +1,34 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <title>WhereYourMouth.is</title>
+<meta name="viewport" content="width-device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="Luke Crouch">
+
+<link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+<!--[if lt IE 9]>
+  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
 </head>
+
 <body>
-  {% if user.is_authenticated %}
-    Thanks for signing up, {{ user.first_name|default:user.username }}
-  {% else %}
-    <a href="{% url socialauth_begin 'facebook' %}">Sign in with Facebook</a>
-  {% endif %}
+  <div class="navbar navbar-fixed-top">
+  </div>
+  <div class="container">
+    <div class="hero-unit">
+      <h1>WhereYourMouth.is</h1>
+      <p>Spend your money at clean and green restaurants.</p>
+    {% if user.is_authenticated %}
+      <h3>Thanks for signing up, {{ user.first_name|default:user.username }}</h3>
+    {% else %}
+    <p><a href="{% url socialauth_begin 'facebook' %}"><img src="{{ STATIC_URL }}img/facebook_signin.png" /></a></p>
+    {% endif %}
+    </div>
+    <footer>
+      <p>&copy; WhereYourMouth.is 2012</p>
+    </footer>
+  </div>
+
 </body>
 </html>

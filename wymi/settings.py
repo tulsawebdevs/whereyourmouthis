@@ -112,6 +112,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    path('static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -201,7 +202,8 @@ try:
     if 'FACEBOOK_API_SECRET' in os.environ:
         FACEBOOK_API_SECRET = os.environ['FACEBOOK_API_SECRET']
 
-    FACEBOOK_EXTENDED_PERMISSIONS = ['user_checkins']
+    FACEBOOK_EXTENDED_PERMISSIONS = ['user_checkins', 'publish_checkins',
+                                     'user_location',]
 except Exception:
     print 'Unexpected error:', sys.exc_info()
 LOGIN_REDIRECT_URL = "/"
