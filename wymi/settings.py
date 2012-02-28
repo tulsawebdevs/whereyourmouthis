@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     'social_auth',
 
     'inspections',
+    'users',
 )
 
 # A sample logging configuration. The only tangible logging
