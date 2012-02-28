@@ -11,6 +11,9 @@ class Facility(models.Model):
     type = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
 
+    def __unicode__(self):
+        return self.name
+
 class Inspection(models.Model):
     facility = models.ForeignKey('Facility')
     date = models.DateField()
@@ -18,8 +21,15 @@ class Inspection(models.Model):
     type = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
 
+    def __unicode__(self):
+        return "%s: %s" % (self.facility.name, self.date)
+
 class Violation(models.Model):
     inspection = models.ForeignKey('Inspection')
     type = models.CharField(max_length=255, blank=True)
     details = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s: %s: %s" % (self.inspection.facility, self.inspection.date,
+                               self.type)
