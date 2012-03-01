@@ -146,6 +146,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+AUTH_PROFILE_MODULE = 'users.Profile'
+
 ROOT_URLCONF = '%s.urls' % ROOT_PACKAGE
 
 TEMPLATE_DIRS = (
@@ -203,8 +205,7 @@ try:
     if 'FACEBOOK_API_SECRET' in os.environ:
         FACEBOOK_API_SECRET = os.environ['FACEBOOK_API_SECRET']
 
-    FACEBOOK_EXTENDED_PERMISSIONS = ['user_checkins', 'publish_checkins',
-                                     'user_location',]
+    FACEBOOK_EXTENDED_PERMISSIONS = ['user_checkins', 'user_location',]
 except Exception:
     print 'Unexpected error:', sys.exc_info()
 LOGIN_REDIRECT_URL = "/"
@@ -212,3 +213,13 @@ SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
+SOCIAL_AUTH_PIPELINE = (
+        'social_auth.backends.pipeline.social.social_auth_user',
+        'social_auth.backends.pipeline.associate.associate_by_email',
+        'social_auth.backends.pipeline.user.get_username',
+        'social_auth.backends.pipeline.user.create_user',
+        'social_auth.backends.pipeline.social.associate_user',
+        'social_auth.backends.pipeline.social.load_extra_data',
+        'social_auth.backends.pipeline.user.update_user_details',
+        'users.create_user_profile',
+)
