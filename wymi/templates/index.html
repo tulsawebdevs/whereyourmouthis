@@ -10,6 +10,7 @@
         <div class="alert alert-success">
           <h3>Thanks for signing up, {{ user.first_name|default:user.username }}</h3>
         </div>
+        <p>Your username is {{ user.username }} and your api key is {{ user.profile.api_key }}</p>
       {% else %}
         <p><a href="{% url socialauth_begin 'facebook' %}"><img src="{{ STATIC_URL }}img/facebook_signin.png" /></a></p>
       {% endif %}
