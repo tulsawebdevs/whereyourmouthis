@@ -171,6 +171,7 @@ INSTALLED_APPS = (
     'social_auth',
 
     'inspections',
+    'notifications',
     'users',
 )
 
