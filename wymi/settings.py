@@ -205,7 +205,7 @@ try:
     if 'FACEBOOK_API_SECRET' in os.environ:
         FACEBOOK_API_SECRET = os.environ['FACEBOOK_API_SECRET']
 
-    FACEBOOK_EXTENDED_PERMISSIONS = ['user_checkins', 'user_location',]
+    FACEBOOK_EXTENDED_PERMISSIONS = ['user_location', 'user_status']
 except Exception:
     print 'Unexpected error:', sys.exc_info()
 LOGIN_REDIRECT_URL = "/"
