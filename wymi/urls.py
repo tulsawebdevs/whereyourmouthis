@@ -6,6 +6,8 @@ from tastypie.api import Api
 from inspections.api import (FacilityResource, InspectionResource,
                              ViolationResource)
 
+from home.views import HomeIndexView
+
 
 admin.autodiscover()
 
@@ -19,6 +21,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/docs', TemplateView.as_view(template_name="api_docs.html"), name="api_docs"),
     url(r'^api/', include(v1_api.urls)),
-    url(r'^$', TemplateView.as_view(template_name="index.html"), name="home"),
+    url(r'^$', HomeIndexView.as_view(), name="home"),
     url(r'', include('social_auth.urls')),
 )
