@@ -7,6 +7,8 @@ from .models import Facility, Inspection, Violation
 
 class CreatorAuthorization(Authorization):
     def apply_limits(self, request, object_list):
+        if request.method == 'GET':
+            return object_list
         if request and hasattr(request, 'user'):
             if request.user.is_superuser:
                 return object_list
