@@ -1,6 +1,20 @@
+/* @override http://127.0.0.1:8000/static/css/styles.css */
+
 .marketing h1{
-  margin: 36px 0px 27px;
-  font-size: 40px;
+  margin: 16px 0px 27px;
+  font-size: 3em;
   font-weight: 300;
   text-align: center;
+}
+
+.marketing h3{
+	text-align: center;
+}
+
+.marketing .deets{
+	
+}
+
+.marketing .deets > div{
+	min-height: 200px;
 }
