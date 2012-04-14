@@ -7,6 +7,7 @@
 <meta name="author" content="Luke Crouch">
 
 <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+<link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet">
 <link href="{{ STATIC_URL }}css/styles.css" rel="stylesheet">
 <!--[if lt IE 9]>
   <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -16,7 +17,7 @@
 <body>
   <div class="navbar navbar-fixed-top">
   </div>
-  <div class="container">
+  <div class="container-fluid">
     {% block content %}{% endblock %}
     {% block footer %}
     <footer>
@@ -26,4 +27,7 @@
   </div>
 
 </body>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+{{ browserid_form.media }}
 </html>

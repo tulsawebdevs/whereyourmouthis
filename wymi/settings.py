@@ -133,6 +133,12 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.static',
+    'django_browserid.context_processors.browserid_form',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -142,7 +148,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.facebook.FacebookBackend',
+    'django_browserid.auth.BrowserIDBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -166,9 +172,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+
     'south',
     'tastypie',
-    'social_auth',
+    'django_browserid',
 
     'inspections',
     'notifications',
@@ -198,29 +205,7 @@ LOGGING = {
     }
 }
 
-SOCIAL_AUTH_ENABLED_BACKENDS = ('facebook')
-try:
-    if 'FACEBOOK_APP_ID' in os.environ:
-        FACEBOOK_APP_ID = os.environ['FACEBOOK_APP_ID']
-
-    if 'FACEBOOK_API_SECRET' in os.environ:
-        FACEBOOK_API_SECRET = os.environ['FACEBOOK_API_SECRET']
-
-    FACEBOOK_EXTENDED_PERMISSIONS = ['user_location', 'user_status']
-except Exception:
-    print 'Unexpected error:', sys.exc_info()
-LOGIN_REDIRECT_URL = "/"
-SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
-SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
-SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
-SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
-SOCIAL_AUTH_PIPELINE = (
-        'social_auth.backends.pipeline.social.social_auth_user',
-        'social_auth.backends.pipeline.associate.associate_by_email',
-        'social_auth.backends.pipeline.user.get_username',
-        'social_auth.backends.pipeline.user.create_user',
-        'social_auth.backends.pipeline.social.associate_user',
-        'social_auth.backends.pipeline.social.load_extra_data',
-        'social_auth.backends.pipeline.user.update_user_details',
-        'users.create_user_profile',
-)
+SITE_URL = 'http://localhost:8000'
+# See: https://github.com/mozilla/django-browserid/issues/8 (TODO)
+BROWSERID_DISABLE_CERT_CHECK = True
+BROWSERID_CACERT_FILE = None
