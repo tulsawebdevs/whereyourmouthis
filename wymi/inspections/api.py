@@ -1,7 +1,7 @@
 from tastypie import fields
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.authorization import Authorization
-from tastypie.resources import ModelResource
+from tastypie.resources import ModelResource, ALL
 from .models import Facility, Inspection, Violation
 
 
@@ -21,6 +21,11 @@ class FacilityResource(ModelResource):
         queryset = Facility.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = CreatorAuthorization()
+        filtering = {
+            'name': ALL,
+            'address': ALL,
+        }
+
 
 class InspectionResource(ModelResource):
     facility = fields.ForeignKey(FacilityResource, 'facility')
