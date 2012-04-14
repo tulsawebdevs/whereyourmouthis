@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}WhereYourMouth.is{% endblock %}
+
+{% block content %}
+    <div class="hero-unit">
+      <h1>WhereYourMouth.is API</h1>
+      {% if user.is_authenticated %}
+        <p>Your username is {{ user.username }} and your api key is {{ user.profile.api_key }}</p>
+      {% endif %}
+    </div>
+
+    <hr class="soften"/>
+
+    <div class="marketing">
+        <h1>POST</h1>
+        <div class="row">
+            <div class="span4">
+                <h3>/api/v1/facility/?username=&api_key=</h3>
+                <p>
+                {'name': , 'address': , 'city': , 'state': , 'type': , 'zip_code': }
+                </p>
+            </div>
+            <div class="span4">
+                <h3>/api/v1/inspection/?username=&api_key=</h3>
+                <p>
+                {'facility': api_url*, 'date': '2012-04-13', 'score': , 'type': 'routine'}
+                </p>
+            </div>
+            <div class="span4">
+                <h3>/api/v1/violation/?username=&api_key=</h3>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
