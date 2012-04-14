@@ -33,6 +33,10 @@ class InspectionResource(ModelResource):
         queryset =  Inspection.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = CreatorAuthorization()
+        filtering = {
+            'date': ALL,
+            'facility': ALL,
+        }
 
 class ViolationResource(ModelResource):
     inspection = fields.ForeignKey(InspectionResource, 'inspection')
