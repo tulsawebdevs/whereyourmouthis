@@ -1,5 +1,9 @@
 /* @override http://127.0.0.1:8000/static/css/styles.css */
 
+body >.container{
+	padding-top: 60px;
+}
+
 .marketing h1{
   margin: 16px 0px 27px;
   font-size: 3em;

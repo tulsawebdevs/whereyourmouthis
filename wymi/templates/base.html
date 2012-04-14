@@ -17,6 +17,25 @@
 
 <body>
   <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="{% url home %}">WhereYourMouth.is</a>
+        
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li><a href="{% url home %}">Home</a></li>
+            <li><a href="{% url api_docs %}">API</a></li>
+            <li><a href="#">Find Nearby Ratings</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="container">
     {% block content %}{% endblock %}
@@ -26,6 +45,9 @@
     </footer>
     {% endblock %}
   </div>
-{% block additional_js %}{% endblock additional_js %}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery.min.js"><\/script>')</script>
+  <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+  {% block additional_js %}{% endblock additional_js %}
 </body>
 </html>
