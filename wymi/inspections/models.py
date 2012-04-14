@@ -14,6 +14,7 @@ class Facility(models.Model):
                                     decimal_places=8, blank=True, null=True)
     type = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
+    latest_score = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
         return self.name
