@@ -144,7 +144,7 @@
       var _this = this;
       if (navigator.geolocation) {
         return navigator.geolocation.getCurrentPosition(function(pos) {
-          debugger;          return _this.Facilities.fetch({
+          return _this.Facilities.fetch({
             data: {
               lat: pos.coords.latitude,
               lon: pos.coords.longitude

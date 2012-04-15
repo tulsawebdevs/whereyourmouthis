@@ -153,7 +153,6 @@ App = Backbone.View.extend
     if (navigator.geolocation)
       # Geo refresh request
       navigator.geolocation.getCurrentPosition (pos) =>
-        debugger
         @Facilities.fetch
           data:
             lat: pos.coords.latitude
