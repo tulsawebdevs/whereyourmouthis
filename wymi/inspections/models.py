@@ -1,8 +1,15 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-# Create your models here.
+
+class FacilityManager(models.Manager):
+    def get_cleanest(self):
+        return self.all().order_by('-latest_score').limit(10)
+
+
 class Facility(models.Model):
+    objects = FacilityManager()
+
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
@@ -22,15 +29,23 @@ class Facility(models.Model):
     class Meta:
         unique_together = (("name", "address"),)
 
+
 class Inspection(models.Model):
-    facility = models.ForeignKey('Facility')
+    facility = models.ForeignKey('Facility', related_name='inspections')
     date = models.DateField()
     score = models.IntegerField(blank=True)
     type = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        super(Inspection, self).save(*args, **kwargs)
+        self.facility.latest_score = self.facility.inspections.only(
+            'score').latest('date').score
+        self.facility.save()
+
     def __unicode__(self):
         return "%s: %s" % (self.facility.name, self.date)
+
 
 class Violation(models.Model):
     inspection = models.ForeignKey('Inspection')

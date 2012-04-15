@@ -16,6 +16,7 @@ class CreatorAuthorization(Authorization):
                 return object_list.filter(
                                     creator__username=request.user.username)
 
+
 class FacilityResource(ModelResource):
     class Meta:
         queryset = Facility.objects.all()
@@ -25,12 +26,14 @@ class FacilityResource(ModelResource):
             'name': ALL,
             'address': ALL,
         }
+        ordering = ['latest_score']
 
 
 class InspectionResource(ModelResource):
     facility = fields.ForeignKey(FacilityResource, 'facility')
+
     class Meta:
-        queryset =  Inspection.objects.all()
+        queryset = Inspection.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = CreatorAuthorization()
         filtering = {
@@ -38,8 +41,10 @@ class InspectionResource(ModelResource):
             'facility': ALL,
         }
 
+
 class ViolationResource(ModelResource):
     inspection = fields.ForeignKey(InspectionResource, 'inspection')
+
     class Meta:
         queryset = Violation.objects.all()
         authentication = ApiKeyAuthentication()
