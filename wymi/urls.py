@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
@@ -24,3 +25,8 @@ urlpatterns = patterns('',
     url(r'^$', HomeIndexView.as_view(), name="home"),
     url(r'', include('social_auth.urls')),
 )
+
+if settings.STATIC_ROOT:
+    urlpatterns += patterns(
+        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+            {'document_root': settings.STATIC_ROOT}),)
