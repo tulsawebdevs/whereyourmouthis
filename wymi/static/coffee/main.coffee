@@ -162,14 +162,6 @@ App = Backbone.View.extend
             lon: pos.coords.longitude
 
   initialLoadMap: () ->
-    window.map = MQA.TileMap(
-      $("#map")
-      18
-      loc = 
-        lat:39.743943 
-        lng:-105.020089
-      'map'
-    )
     return
 
 
