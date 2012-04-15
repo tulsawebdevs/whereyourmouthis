@@ -110,6 +110,7 @@ wymi.views.facilityListItem = Backbone.View.extend
     
   viewDetail: () ->
     console.log "viewing detail #{@model.id}"
+    $('#detail').append(view.render().el)
     
   render: () ->
     $(@el).html @template
@@ -135,6 +136,8 @@ App = Backbone.View.extend
     @Facilities.reset(data)
     
     @refreshLocation()
+    @initialLoadMap()
+    return
     
   addOne: (facility) ->
     console.log "adding #{facility.get('name')}"
@@ -157,6 +160,19 @@ App = Backbone.View.extend
           data:
             lat: pos.coords.latitude
             lon: pos.coords.longitude
+
+  initialLoadMap: () ->
+    window.map = MQA.TileMap(
+      $("#map")
+      18
+      loc = 
+        lat:39.743943 
+        lng:-105.020089
+      'map'
+    )
+    return
+
+
 
 console.log 'starting app'
 wymi.app = new App()
