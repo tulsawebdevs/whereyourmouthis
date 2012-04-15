@@ -100,7 +100,7 @@ STATIC_ROOT = os.path.join(ROOT, 'static/')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = 'http://static.whereyourmouth.is/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -223,3 +223,8 @@ SOCIAL_AUTH_PIPELINE = (
         'social_auth.backends.pipeline.user.update_user_details',
         'users.create_user_profile',
 )
+
+try:
+    from settings_override import *
+except:
+    pass
