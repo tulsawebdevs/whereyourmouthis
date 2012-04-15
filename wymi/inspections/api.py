@@ -21,7 +21,7 @@ class CreatorAuthorization(Authorization):
 class FacilityResource(ModelResource):
     class Meta:
         queryset = Facility.objects.all()
-        authentication = ApiKeyAuthentication()
+#        authentication = ApiKeyAuthentication()
         authorization = CreatorAuthorization()
         filtering = {
             'name': ALL,
