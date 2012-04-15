@@ -1,3 +1,4 @@
+from decimal import Decimal as d
 from tastypie import fields
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.authorization import Authorization
@@ -27,6 +28,27 @@ class FacilityResource(ModelResource):
             'address': ALL,
         }
         ordering = ['latest_score']
+
+    def build_filters(self, filters=None):
+        if filters is None:
+            filters = {}
+
+        orm_filters = super(FacilityResource, self).build_filters(filters)
+
+        if 'near' in filters:
+            lat, lng, range = filters['near'].split(',')
+            buffer_str = range
+            low_lat = d(('%.5g' % d(lat))) - d(buffer_str)
+            high_lat = d(('%.5g' % d(lat))) + d(buffer_str)
+            low_lng = d(('%.5g' % d(lng))) - d(buffer_str)
+            high_lng = d(('%.5g' % d(lng))) + d(buffer_str)
+
+            orm_filters.update({'latitude__gte': low_lat,
+                                'latitude__lte': high_lat,
+                                'longitude__gte': low_lng,
+                                'longitude__lte': high_lng})
+
+        return orm_filters
 
 
 class InspectionResource(ModelResource):

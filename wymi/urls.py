@@ -20,7 +20,6 @@ v1_api.register(ViolationResource())
 urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-#    url(r'^api/v1/facility/?near=(?P<lat>),(?P<long>)&dist=(?P<dist>)'),
     url(r'^api/docs', TemplateView.as_view(template_name="api_docs.html"),
         name="api_docs"),
     url(r'^api/', include(v1_api.urls)),
