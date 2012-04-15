@@ -28,5 +28,5 @@ urlpatterns = patterns('',
 
 if settings.STATIC_ROOT:
     urlpatterns += patterns(
-        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+        url(r'^(?P<path>.*)$', 'django.views.static.serve',
             {'document_root': settings.STATIC_ROOT}),)
