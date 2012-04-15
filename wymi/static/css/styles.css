@@ -1,6 +1,6 @@
 /* @override http://127.0.0.1:8000/static/css/styles.css */
 
-body >.container{
+body{
 	padding-top: 60px;
 }
 
@@ -21,4 +21,23 @@ body >.container{
 
 .marketing .deets > div{
 	min-height: 200px;
+}
+
+#facility-list address{
+	margin-bottom: 0;
+	margin-top: 6px;
+}
+
+#facility-list .progress{
+	margin-bottom: 0;
+	clear: both;
+}
+
+#facility-list a{
+	color: inherit;
+}
+
+#facility-list .progress .bar,
+#facility-list .progress{
+	height: 6px;
 }
