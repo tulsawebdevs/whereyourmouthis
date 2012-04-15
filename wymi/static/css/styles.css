@@ -8,6 +8,11 @@ body{
 	
 }
 
+#map{
+  width:750px; 
+  height:475px;
+}
+
 .marketing h1{
   margin: 16px 0px 27px;
   font-size: 3em;
