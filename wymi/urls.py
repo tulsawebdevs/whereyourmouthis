@@ -25,8 +25,3 @@ urlpatterns = patterns('',
     url(r'^$', HomeIndexView.as_view(), name="home"),
     url(r'', include('social_auth.urls')),
 )
-
-if settings.STATIC_ROOT:
-    urlpatterns += patterns(
-        url(r'^(?P<path>.*)$', 'django.views.static.serve',
-            {'document_root': settings.STATIC_ROOT}),)
