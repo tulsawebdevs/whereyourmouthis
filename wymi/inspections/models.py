@@ -1,10 +1,15 @@
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.db import models
 
 
 class FacilityManager(models.Manager):
     def get_cleanest(self):
-        return self.all().order_by('-latest_score').limit(10)
+        return self.all().order_by('-latest_score')[:10]
+
+    def get_cleanest_json(self):
+        json_serializer = serializers.get_serializer("json")()
+        return json_serializer.serialize(self.get_cleanest())
 
 
 class Facility(models.Model):
