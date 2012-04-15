@@ -44,3 +44,8 @@ class ViolationResource(ModelResource):
         queryset = Violation.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = CreatorAuthorization()
+        filtering = {
+            'inspection': ALL,
+            'type': ALL,
+            'code': ALL,
+        }

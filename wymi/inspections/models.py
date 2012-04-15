@@ -35,6 +35,7 @@ class Inspection(models.Model):
 class Violation(models.Model):
     inspection = models.ForeignKey('Inspection')
     type = models.CharField(max_length=255, blank=True)
+    code = models.CharField(max_length=255, blank=True)
     details = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
 
