@@ -63,18 +63,18 @@
       "address": '',
       zip_code: ''
     },
-    initialize: function() {}
+    initialize: function() {},
+    url: function() {
+      return "/api/v1/facility/" + this.id;
+    },
+    parse: function(res) {
+      return res.objects[0];
+    }
   });
 
   wymi.views.facilityDetail = Backbone.View.extend({
     tagName: 'div',
     template: _.template($('#facilityDetail').html()),
-    url: function() {
-      return "/api/v1/facility/" + this.id;
-    },
-    parse: function(res) {
-      return res;
-    },
     render: function() {
       $(this.el).html(this.template(this.model.toJSON()));
       return this;
@@ -108,7 +108,7 @@
     render: function() {
       $(this.el).html(this.template({
         fac: this.model.toJSON(),
-        display_address: true
+        display_address: this.display
       }));
       return this;
     }
@@ -116,13 +116,17 @@
 
   App = Backbone.View.extend({
     el: $("#appview"),
+    events: {
+      "click #refreshLoc": "refreshLocation"
+    },
     initialize: function() {
-      _.bindAll(this, 'addOne', 'addAll', 'render');
+      _.bindAll(this, 'addOne', 'addAll', 'render', 'refreshLocation');
       this.Facilities = new wymi.collections.facilities;
       this.Facilities.bind('add', this.addOne);
       this.Facilities.bind('reset', this.addAll);
       this.Facilities.bind('all', this.render);
-      return this.Facilities.reset(data);
+      this.Facilities.reset(data);
+      return this.refreshLocation();
     },
     addOne: function(facility) {
       var view;
@@ -135,6 +139,19 @@
     addAll: function() {
       this.$('#facility-list').empty();
       return this.Facilities.each(this.addOne);
+    },
+    refreshLocation: function() {
+      var _this = this;
+      if (navigator.geolocation) {
+        return navigator.geolocation.getCurrentPosition(function(pos) {
+          debugger;          return _this.Facilities.fetch({
+            data: {
+              lat: pos.coords.latitude,
+              lon: pos.coords.longitude
+            }
+          });
+        });
+      }
     }
   });
 

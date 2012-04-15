@@ -65,19 +65,19 @@ wymi.models.facility = Backbone.Model.extend
     zip_code: ''
     
   initialize: () ->
+    
+  url: () ->
+    return "/api/v1/facility/#{@id}"
+    
+  parse: (res) ->
+    return res.objects[0]
+    
 
 # Facility Detail View
 wymi.views.facilityDetail = Backbone.View.extend
   tagName: 'div'
 
   template: _.template($('#facilityDetail').html())
-  
-  url: () ->
-    return "/api/v1/facility/#{@id}"
-    
-  parse: (res) ->
-    #may need to be parsed
-    return res
     
   render: () ->
     $(@el).html @template(@model.toJSON())
@@ -114,26 +114,28 @@ wymi.views.facilityListItem = Backbone.View.extend
   render: () ->
     $(@el).html @template
       fac: @model.toJSON()
-      display_address: true
+      display_address: @display
     return @
     
-# App
 
 App = Backbone.View.extend
   el: $("#appview")
   
-  # events:
-    # ""
+  events:
+    "click #refreshLoc": "refreshLocation"
+    
   initialize: () ->
-    _.bindAll @, 'addOne', 'addAll', 'render'
-  
+    _.bindAll @, 'addOne', 'addAll', 'render', 'refreshLocation'
+    
     @Facilities = new wymi.collections.facilities
-    @Facilities.bind('add', this.addOne)
-    @Facilities.bind('reset', this.addAll);
-    @Facilities.bind('all', this.render)
+    @Facilities.bind('add', @addOne)
+    @Facilities.bind('reset', @addAll);
+    @Facilities.bind('all', @render)
     
     @Facilities.reset(data)
-  
+    
+    @refreshLocation()
+    
   addOne: (facility) ->
     console.log "adding #{facility.get('name')}"
     
@@ -146,8 +148,16 @@ App = Backbone.View.extend
     # remove all existing facilities
     @.$('#facility-list').empty()
     @Facilities.each(@.addOne)
-    
-  # render: () ->
+  
+  refreshLocation: () ->
+    if (navigator.geolocation)
+      # Geo refresh request
+      navigator.geolocation.getCurrentPosition (pos) =>
+        debugger
+        @Facilities.fetch
+          data:
+            lat: pos.coords.latitude
+            lon: pos.coords.longitude
 
 console.log 'starting app'
 wymi.app = new App()

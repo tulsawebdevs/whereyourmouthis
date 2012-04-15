@@ -4,6 +4,10 @@ body{
 	padding-top: 60px;
 }
 
+#appview{
+	
+}
+
 .marketing h1{
   margin: 16px 0px 27px;
   font-size: 3em;
@@ -31,6 +35,14 @@ body{
 #facility-list .progress{
 	margin-bottom: 0;
 	clear: both;
+}
+
+#facility-list h3{
+	float: left;
+}
+
+#facility-list .score{
+	float: right;
 }
 
 #facility-list a{
