@@ -209,7 +209,7 @@ try:
 except Exception:
     print 'Unexpected error:', sys.exc_info()
 LOGIN_REDIRECT_URL = "/"
-SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
+SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
