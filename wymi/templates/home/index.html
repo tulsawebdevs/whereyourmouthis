@@ -1,20 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <section id="appview">
-    <ul id="facility-list" class="nav nav-tabs nav-stacked">
-        
-    </ul>
-    <div id="map">
-      
-    </div>
+  {# row-fluid #}
+  <section id="main" class="row"> 
   </section>
 {% endblock content %}
 
 {% block templates %}
+{# Layouts #}
+<script type="text/template" id="index">
+  <div class="span6 left"></div>
+  <div class="span6 right"></div>
+</script>
 
+<script type="text/template" id="detail">
+  <div class="span12">
+    <a href="/" data-navigate class="btn"><i class="icon-arrow-left"></i> Back</a>
+  </div>
+  <div class="span6 left"></div>
+  <div class="span6 right"></div>
+</script>
+
+{# Parts #}
 <script type="text/template" id="facilityListItem">
-  <a>
+  <a href="/location/<%=fac.id %>" data-navigate>
   <h3><%= fac.name %></h3>
   <span class="score"><%= fac.latest_score %></span>
   <% if(fac.distance){ %>
@@ -33,15 +42,32 @@
   <% } %>
   </a>
 </script>
-  
+
+<script type="text/template" id="facilityList">
+  <h3>Locations (<%= count %>)</h3>
+  <a href="#" class="btn refresh"><i class="icon-refresh"></i> Refresh</a>
+  <hr>
+  <ul class="facility-list nav nav-tabs nav-stacked">
+  </ul>
+</script>
+
 <script type="text/template" id="facilityDetail">
-  detail
+  <h2><%= fac.name %> <span class="score badge"><%= fac.latest_score %></span></h2>
+  <dl class="dl-horizontal">
+    <dt>Address:</dt>
+    <dd><%= fac.address %></dd>
+    <dt>Type:</dt>
+    <dd><%= fac.type %></dd>
+  </dl>
 </script>
 
 {% endblock templates %}
 
 {% block additional_js %}
+<script src="http://www.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js?key=Fmjtd%7Cluua2qubll%2Cax%3Do5-hztwd"></script>
 <script src="{{ STATIC_URL }}js/underscore.js"></script>
 <script src="{{ STATIC_URL }}js/backbone.js"></script>
+<script src="{{ STATIC_URL }}js/backbone.layoutmanager.js"></script>
 <script src="{{ STATIC_URL }}js/main.js"></script>
+<script src="{{ STATIC_URL }}js/map.js"></script>
 {% endblock additional_js %}

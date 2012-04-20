@@ -30,6 +30,7 @@
           <ul class="nav">
             {# <li><a href="{% url home %}">Home</a></li> #}
             <li><a href="{% url api_docs %}">API</a></li>
+            {% block nav %}{% endblock nav %}
           </ul>
         </div>
       </div>

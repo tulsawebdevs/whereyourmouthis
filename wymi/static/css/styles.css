@@ -4,6 +4,15 @@ body{
 	padding-top: 60px;
 }
 
+#appview{
+	
+}
+
+/*#map{
+  width:750px; 
+  height:475px;
+}*/
+
 .marketing h1{
   margin: 16px 0px 27px;
   font-size: 3em;
@@ -23,21 +32,42 @@ body{
 	min-height: 200px;
 }
 
-#facility-list address{
+.facility-wrapper hr{
+	clear: both;
+}
+
+.facility-wrapper h3{
+	float: left;
+}
+
+.facility-wrapper .refresh{
+	float: right;
+	margin-bottom: 10px;
+}
+
+.facility-list address{
 	margin-bottom: 0;
 	margin-top: 6px;
 }
 
-#facility-list .progress{
+.facility-list .progress{
 	margin-bottom: 0;
 	clear: both;
 }
 
-#facility-list a{
+.facility-list h3{
+	float: left;
+}
+
+.facility-list .score{
+	float: right;
+}
+
+.facility-list a{
 	color: inherit;
 }
 
-#facility-list .progress .bar,
-#facility-list .progress{
+.facility-list .progress .bar,
+.facility-list .progress{
 	height: 6px;
 }

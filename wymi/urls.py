@@ -24,5 +24,6 @@ urlpatterns = patterns('',
         name="api_docs"),
     url(r'^api/', include(v1_api.urls)),
     url(r'^$', HomeIndexView.as_view(), name="home"),
+    url(r'^location/(\d+)/?', HomeIndexView.as_view(), name="home"),
     url(r'', include('social_auth.urls')),
 )
