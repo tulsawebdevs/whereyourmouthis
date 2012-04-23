@@ -92,7 +92,8 @@ Facility.Views.List = Backbone.View.extend
       @render()
     , @)
     
-    # @collection.reset(data)
+    # TODO: bootstrap with reset when I figure out how
+    @collection.fetch()
     
     @refreshLocation()
     return
@@ -117,10 +118,13 @@ Facility.Views.List = Backbone.View.extend
     if (navigator.geolocation)
       # Geo refresh request
       navigator.geolocation.getCurrentPosition (pos) =>
+        lat = pos.coords.latitude
+        lon = pos.coords.longitude
+        # approx. 1/2 mile TODO: if 0 found, try dist = .1
+        dist = .01
         @collection.fetch
           data:
-            lat: pos.coords.latitude
-            lon: pos.coords.longitude
+            near: "#{lat},#{lon},#{dist}"
     
 Facility.Views.Detail = Backbone.View.extend
   tagName: 'div'
@@ -152,18 +156,16 @@ Facility.Model = Backbone.Model.extend
   initialize: () ->
     
   url: () ->
-    return "/api/v1/facility/#{@id}"
+    return "/api/v1/facility/#{@id}?format=json"
     
   parse: (res) ->
-    return res.objects[0]
+    return res
     
 Facility.Collection = Backbone.Collection.extend
   model: Facility.Model
     
   url: () ->
-    # Change url based on location
-    # http://whereyourmouth.is/api/v1/facility/?format=json
-    return "/api/v1/facility/"
+    return "/api/v1/facility/?format=json&order_by=-latest_score"
     
   parse: (res) ->
     return res.objects
@@ -212,7 +214,8 @@ Router = Backbone.Router.extend
     
   initialize: () ->
     wymi.facilities = new Facility.Collection
-    wymi.facilities.reset(data)
+    # TODO: bootstrap with reset when I figure out how
+    wymi.facilities.fetch()
     return
     
   routes:
