@@ -3,4 +3,5 @@ venv
 *.swp
 db.sqlite3
 wymi/settings.py
+wymi/settings_override.py
 wymi/wymidb
