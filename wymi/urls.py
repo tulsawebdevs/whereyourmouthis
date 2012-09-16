@@ -4,9 +4,10 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from tastypie.api import Api
+
 from inspections.api import (FacilityResource, InspectionResource,
                              ViolationResource)
-
+from inspections.views import load as iv_load
 from home.views import HomeIndexView
 
 
@@ -24,6 +25,6 @@ urlpatterns = patterns('',
         name="api_docs"),
     url(r'^api/', include(v1_api.urls)),
     url(r'^$', HomeIndexView.as_view(), name="home"),
+    url(r'^inspections/load/?$', iv_load, name='inspections_load'),
     url(r'^location/(\d+)/?', HomeIndexView.as_view(), name="home"),
-    url(r'', include('social_auth.urls')),
 )

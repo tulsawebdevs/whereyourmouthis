@@ -24,7 +24,6 @@ class Facility(models.Model):
                                   blank=True, null=True)
     longitude = models.DecimalField('Longitude', max_digits=13,
                                     decimal_places=8, blank=True, null=True)
-    type = models.CharField(max_length=255, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
     latest_score = models.IntegerField(blank=True, null=True)
 
