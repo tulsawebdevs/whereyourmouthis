@@ -36,12 +36,11 @@ class FacilityResource(ModelResource):
         orm_filters = super(FacilityResource, self).build_filters(filters)
 
         if 'near' in filters:
-            lat, lng, range = filters['near'].split(',')
-            buffer_str = range
-            low_lat = d(('%.5g' % d(lat))) - d(buffer_str)
-            high_lat = d(('%.5g' % d(lat))) + d(buffer_str)
-            low_lng = d(('%.5g' % d(lng))) - d(buffer_str)
-            high_lng = d(('%.5g' % d(lng))) + d(buffer_str)
+            lat, lng, dist = filters['near'].split(',')
+            low_lat = d(('%.5g' % d(lat))) - d(dist)
+            high_lat = d(('%.5g' % d(lat))) + d(dist)
+            low_lng = d(('%.5g' % d(lng))) - d(dist)
+            high_lng = d(('%.5g' % d(lng))) + d(dist)
 
             orm_filters.update({'latitude__gte': low_lat,
                                 'latitude__lte': high_lat,
