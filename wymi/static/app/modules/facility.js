@@ -60,7 +60,7 @@ define(["app", "backbone"], function(app, Backbone) {
     initialize: function() {
       _.bindAll(this, 'render', 'refreshLocation');
       this.collection.bind('reset', this.render);
-      this.refreshLocation();
+      this.collection.bind('all', this.render);
     },
     serialize: function() {
       return {
@@ -74,22 +74,6 @@ define(["app", "backbone"], function(app, Backbone) {
           model: facility
         }));
       });
-    },
-    refreshLocation: function() {
-      var _this = this;
-      if (navigator.geolocation) {
-        return navigator.geolocation.getCurrentPosition(function(pos) {
-          var dist, lat, lon;
-          lat = pos.coords.latitude;
-          lon = pos.coords.longitude;
-          dist = .01;
-          return _this.collection.fetch({
-            data: {
-              near: "" + lat + "," + lon + "," + dist
-            }
-          });
-        });
-      }
     },
     cleanup: function() {
       return this.collection.off(null, null, this);

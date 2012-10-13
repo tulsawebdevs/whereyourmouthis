@@ -79,9 +79,9 @@ define [
       
       # @collection.bind('add', @render)
       @collection.bind('reset', @render)
-      # @collection.bind('all', @render)
+      @collection.bind('all', @render)
     
-      @refreshLocation()
+      # @refreshLocation()
       return
 
     serialize: ->
@@ -89,23 +89,22 @@ define [
         count: @collection.length
       }
 
-
     beforeRender: () ->
       @collection.each (facility) =>
         @insertView '.facility-list', new Facility.Views.ListItem
           model: facility
 
-    refreshLocation: () ->
-      if (navigator.geolocation)
-        # Geo refresh request
-        navigator.geolocation.getCurrentPosition (pos) =>
-          lat = pos.coords.latitude
-          lon = pos.coords.longitude
-          # approx. 1/2 mile TODO: if 0 found, try dist = .1
-          dist = .01
-          @collection.fetch
-            data:
-              near: "#{lat},#{lon},#{dist}"
+    # refreshLocation: () ->
+    #   if (navigator.geolocation)
+    #     # Geo refresh request
+    #     navigator.geolocation.getCurrentPosition (pos) =>
+    #       lat = pos.coords.latitude
+    #       lon = pos.coords.longitude
+    #       # approx. 1/2 mile TODO: if 0 found, try dist = .1
+    #       dist = .01
+    #       @collection.fetch
+    #         data:
+    #           near: "#{lat},#{lon},#{dist}"
 
     cleanup: ->
       @collection.off(null, null, @)
