@@ -1,0 +1,2 @@
+Werkzeug==0.8.3
+django-extensions==0.9

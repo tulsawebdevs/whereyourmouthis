@@ -1,0 +1,7 @@
+{% spaceless %}
+[
+{% for facility in facilities %}
+  {"name": {{ facility.name }}, "address": {{ facility.address }}, "latest_score": {{ facility.latest_score }}, "lat": {{ facility.latitude }}, "lng": {{ facility.longitude }} },
+{% endfor %}
+]
+{% endspaceless %}
