@@ -3,7 +3,10 @@ require([
   "app",
 
   // Main Router.
-  "router"
+  "router",
+  
+  // Bootstrap Framework JS
+  "bootstrap"
 ],
 
 function(app, Router) {

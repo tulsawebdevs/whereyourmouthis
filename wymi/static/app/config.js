@@ -13,7 +13,7 @@ require.config({
     // Libraries.
     jquery: "../js/libs/jquery",
     lodash: "../js/libs/lodash",
-    backbone: "../js/libs/backbone"
+    backbone: "../js/libs/backbone",
     bootstrap: "../js/libs/bootstrap"
   },
 
@@ -23,10 +23,15 @@ require.config({
       deps: ["lodash", "jquery"],
       exports: "Backbone"
     },
-
+    
+    bootstrap: {
+      deps: ["jquery"],
+      exports: "$"
+    },
     // Backbone.LayoutManager depends on Backbone.
     "plugins/backbone.layoutmanager": ["backbone"],
-    "plugins/backbone.paginator": ["backbone"]
+    // "plugins/backbone.paginator": ["backbone"],
+    "plugins/backbone.subset": ["backbone"]
   }
 
 });

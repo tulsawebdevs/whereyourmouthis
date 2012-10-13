@@ -26,8 +26,8 @@ function($, _, Backbone) {
     manage: true,
 
     paths: {
-      layout: "app/templates/layouts/",
-      template: "app/templates/"
+      layout: "static/app/templates/layouts/",
+      template: "static/app/templates/"
     },
 
     fetch: function(path) {

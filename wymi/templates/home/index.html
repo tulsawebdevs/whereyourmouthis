@@ -3,7 +3,7 @@
 {% block head %}
 {{block.super}}
 {# <script src="http://www.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js?key=Fmjtd%7Cluua2qubll%2Cax%3Do5-hztwd"></script> #}
-<script data-main="app/config" src="{{ STATIC_URL }}js/libs/require.js"></script>
+<script data-main="static/app/config" src="{{ STATIC_URL }}js/libs/require.js"></script>
 {% endblock head %}
 
 {% block content %}
@@ -11,60 +11,3 @@
   <section id="main" class="row"> 
   </section>
 {% endblock content %}
-
-{% block templates %}
-{# Layouts #}
-<script type="text/template" id="index">
-  <div class="span6 left"></div>
-  <div class="span6 right"></div>
-</script>
-
-<script type="text/template" id="detail">
-  <div class="span12">
-    <a href="/" data-navigate class="btn"><i class="icon-arrow-left"></i> Back</a>
-  </div>
-  <div class="span6 left"></div>
-  <div class="span6 right"></div>
-</script>
-
-{# Parts #}
-<script type="text/template" id="facilityListItem">
-  <a href="/location/<%=fac.id %>" data-navigate>
-  <h3><%= fac.name %></h3>
-  <span class="score"><%= fac.latest_score %></span>
-  <% if(fac.distance){ %>
-  <span class="distance"><%= fac.distance %></span>
-  <%
-  }
-  // different colors for score%
-  // 'progress-success'
-  // 'progress-warning'
-  // 'progress-danger'
-  var colorClass = 'progress-success'
-  %>
-  <div class="progress <%= colorClass %>"><div class="bar" style="width: <%= fac.latest_score%>%"></div></div>
-  <% if(display_address){ %>
-  <address><%= fac.address %></address>
-  <% } %>
-  </a>
-</script>
-
-<script type="text/template" id="facilityList">
-  <h3>Locations (<%= count %>)</h3>
-  <a href="#" class="btn refresh"><i class="icon-refresh"></i> Refresh</a>
-  <hr>
-  <ul class="facility-list nav nav-tabs nav-stacked">
-  </ul>
-</script>
-
-<script type="text/template" id="facilityDetail">
-  <h2><%= fac.name %> <span class="score badge"><%= fac.latest_score %></span></h2>
-  <dl class="dl-horizontal">
-    <dt>Address:</dt>
-    <dd><%= fac.address %></dd>
-    <dt>Type:</dt>
-    <dd><%= fac.type %></dd>
-  </dl>
-</script>
-
-{% endblock templates %}
