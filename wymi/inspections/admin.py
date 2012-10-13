@@ -4,7 +4,9 @@ from .models import Facility, Inspection, Violation
 
 
 class FacilityAdmin(admin.ModelAdmin):
-    list_display = ('name', 'address', 'latitude', 'longitude', 'latest_score')
+    list_display = ('name', 'address', 'city', 'latitude', 'longitude', 'latest_score')
+    list_filter = ('city',)
+    search_fields = ('name',)
 
 
 class InspectionAdmin(admin.ModelAdmin):
