@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block head %}
+{{block.super}}
+{# <script src="http://www.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js?key=Fmjtd%7Cluua2qubll%2Cax%3Do5-hztwd"></script> #}
+<script data-main="app/config" src="{{ STATIC_URL }}js/libs/require.js"></script>
+{% endblock head %}
+
 {% block content %}
   {# row-fluid #}
   <section id="main" class="row"> 
@@ -62,12 +68,3 @@
 </script>
 
 {% endblock templates %}
-
-{% block additional_js %}
-<script src="http://www.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js?key=Fmjtd%7Cluua2qubll%2Cax%3Do5-hztwd"></script>
-<script src="{{ STATIC_URL }}js/underscore.js"></script>
-<script src="{{ STATIC_URL }}js/backbone.js"></script>
-<script src="{{ STATIC_URL }}js/backbone.layoutmanager.js"></script>
-<script src="{{ STATIC_URL }}js/main.js"></script>
-<script src="{{ STATIC_URL }}js/map.js"></script>
-{% endblock additional_js %}
