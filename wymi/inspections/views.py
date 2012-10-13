@@ -2,7 +2,7 @@ import StringIO
 import csv
 import requests
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -25,11 +25,18 @@ def import_facility(request):
 def region(request):
     lat = request.GET.get('lat', '')
     lng = request.GET.get('lng', '')
+    if not lat or not lng:
+        return HttpResponseBadRequest("lat and lng are both required ... to be spelled right.")
     boundary_url = 'http://www.oklahomadata.org/boundary/1.0/boundary/?contains=%s,%s&sets=counties'
     resp = requests.get(boundary_url % (lat, lng ))
-    slug = resp.json['objects'][0]['slug']
+    slug = resp.json['objects'][0]['name'].lower()
     return HttpResponse("/%s.json" % slug)
 
+def region_json(request, region):
+    facilities = Facility.objects.filter(city__iexact=region.lower())
+    return render_to_response("inspections/region.json.html",
+                              {'facilities': facilities},
+                              mimetype='application/json')
 
 def load(request):
     """Load documents from uploaded file."""
