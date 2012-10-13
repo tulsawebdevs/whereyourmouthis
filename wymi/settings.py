@@ -141,7 +141,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.facebook.FacebookBackend',
+    # 'social_auth.backends.facebook.FacebookBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -167,7 +167,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'south',
     'tastypie',
-    'social_auth',
+    # 'social_auth',
 
     'inspections',
     'notifications',
@@ -209,6 +209,7 @@ try:
 except Exception:
     print 'Unexpected error:', sys.exc_info()
 LOGIN_REDIRECT_URL = "/"
+"""
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
@@ -223,6 +224,7 @@ SOCIAL_AUTH_PIPELINE = (
         'social_auth.backends.pipeline.user.update_user_details',
         'users.create_user_profile',
 )
+"""
 
 try:
     from settings_override import *
