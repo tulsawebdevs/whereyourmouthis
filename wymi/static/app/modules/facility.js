@@ -19,7 +19,7 @@ define(["app", "backbone"], function(app, Backbone) {
     },
     initialize: function() {},
     url: function() {
-      return "/api/v1/facility/" + this.id + "?format=json";
+      return "" + app.api.startPoint + "facility/" + this.id + "/?format=json";
     },
     parse: function(res) {
       return res;
@@ -28,7 +28,7 @@ define(["app", "backbone"], function(app, Backbone) {
   Facility.Collection = Backbone.Collection.extend({
     model: Facility.Model,
     url: function() {
-      return "/api/v1/facility/?format=json&order_by=-latest_score";
+      return "" + app.api.startPoint + "facility/?format=json&order_by=-latest_score";
     },
     parse: function(res) {
       return res.objects;
@@ -60,7 +60,6 @@ define(["app", "backbone"], function(app, Backbone) {
     initialize: function() {
       _.bindAll(this, 'render', 'refreshLocation');
       this.collection.bind('reset', this.render);
-      this.collection.bind('all', this.render);
     },
     serialize: function() {
       return {
@@ -75,6 +74,18 @@ define(["app", "backbone"], function(app, Backbone) {
         }));
       });
     },
+    refreshLocation: function() {
+      var _this = this;
+      return app.fetchLocation().done(function(pos) {
+        var dist;
+        dist = .01;
+        return _this.collection.fetch({
+          data: {
+            near: "" + pos.coords.latitude + "," + pos.coords.longitude + "," + dist
+          }
+        });
+      });
+    },
     cleanup: function() {
       return this.collection.off(null, null, this);
     }
@@ -83,6 +94,11 @@ define(["app", "backbone"], function(app, Backbone) {
     tagName: 'div',
     className: "facility-detail-wrapper well",
     template: 'facilityDetail',
+    initialize: function() {
+      _.bindAll(this, 'render');
+      this.model.bind('reset', this.render);
+      return this.model.bind('change', this.render);
+    },
     serialize: function() {
       return {
         fac: this.model.toJSON()

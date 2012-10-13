@@ -24,7 +24,7 @@ define [
     initialize: () ->
     
     url: () ->
-      return "/api/v1/facility/#{@id}?format=json"
+      return "#{app.api.startPoint}facility/#{@id}/?format=json"
     
     parse: (res) ->
       return res
@@ -34,7 +34,7 @@ define [
     model: Facility.Model
     
     url: () ->
-      return "/api/v1/facility/?format=json&order_by=-latest_score"
+      return "#{app.api.startPoint}facility/?format=json&order_by=-latest_score"
     
     parse: (res) ->
       return res.objects
@@ -79,7 +79,7 @@ define [
       
       # @collection.bind('add', @render)
       @collection.bind('reset', @render)
-      @collection.bind('all', @render)
+      # @collection.bind('all', @render)
     
       # @refreshLocation()
       return
@@ -93,18 +93,17 @@ define [
       @collection.each (facility) =>
         @insertView '.facility-list', new Facility.Views.ListItem
           model: facility
-
-    # refreshLocation: () ->
-    #   if (navigator.geolocation)
-    #     # Geo refresh request
-    #     navigator.geolocation.getCurrentPosition (pos) =>
-    #       lat = pos.coords.latitude
-    #       lon = pos.coords.longitude
-    #       # approx. 1/2 mile TODO: if 0 found, try dist = .1
-    #       dist = .01
-    #       @collection.fetch
-    #         data:
-    #           near: "#{lat},#{lon},#{dist}"
+    
+    # afterRender: () ->
+      # @$el.find('.refresh').button('loading');
+      
+    refreshLocation: () ->
+      app.fetchLocation().done (pos) =>
+        # approx. 1/2 mile TODO: if 0 found, try dist = .1
+        dist = .01
+        @collection.fetch
+          data:
+            near: "#{pos.coords.latitude},#{pos.coords.longitude},#{dist}"
 
     cleanup: ->
       @collection.off(null, null, @)
@@ -116,6 +115,12 @@ define [
     className: "facility-detail-wrapper well",
     
     template: 'facilityDetail'
+    
+    initialize: () ->
+      _.bindAll(@, 'render')
+      
+      @model.bind('reset', @render)
+      @model.bind('change', @render)
   
     serialize: () ->
       return{

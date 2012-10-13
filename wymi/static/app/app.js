@@ -2,7 +2,16 @@
 define(["jquery", "lodash", "backbone", "plugins/backbone.layoutmanager"], function($, _, Backbone) {
   var JST, app;
   app = {
-    root: "/"
+    api: {
+      regionEndPoint: '/region',
+      startPoint: '/api/v1/'
+    },
+    regionFile: null,
+    root: "/",
+    locationOpt: {
+      maximumAge: 60 * 60 * 100,
+      timeout: 3000
+    }
   };
   JST = window.JST = window.JST || {};
   Backbone.LayoutManager.configure({
@@ -27,7 +36,7 @@ define(["jquery", "lodash", "backbone", "plugins/backbone.layoutmanager"], funct
       }
     }
   });
-  return _.extend(app, {
+  _.extend(app, {
     module: function(additionalProps) {
       return _.extend({
         Views: {}
@@ -50,6 +59,40 @@ define(["jquery", "lodash", "backbone", "plugins/backbone.layoutmanager"], funct
       layout.render();
       this.layout = layout;
       return layout;
+    },
+    fetchLocation: function() {
+      var def;
+      def = $.Deferred();
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          return def.resolve(pos);
+        }, function(err) {
+          return def.reject(err);
+        }, this.locationOpt);
+      } else {
+        console.error('location services not supported in this browser');
+        def.reject();
+      }
+      return def;
+    },
+    fetchRegion: function() {
+      var _this = this;
+      return this.fetchLocation().done(function(pos) {
+        return $.ajax({
+          url: _this.api.regionEndPoint,
+          method: 'get',
+          data: {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          }
+        }).error(function(resp, type) {
+          return _this.trigger('regionFileUpdate', new Error('unable to retrieve region file location'), _this.regionFile);
+        }).success(function(resp) {
+          _this.regionFile = resp;
+          return _this.trigger('regionFileUpdate', null, resp);
+        });
+      });
     }
   }, Backbone.Events);
+  return app;
 });
