@@ -228,5 +228,5 @@ SOCIAL_AUTH_PIPELINE = (
 
 try:
     from settings_override import *
-except:
+except ImportError:
     pass

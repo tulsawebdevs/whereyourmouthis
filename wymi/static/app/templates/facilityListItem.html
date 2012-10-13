@@ -1,0 +1,18 @@
+<a href="/location/<%=fac.id %>" data-navigate>
+<h3><%= fac.name %></h3>
+<span class="score"><%= fac.latest_score %></span>
+<% if(fac.distance){ %>
+<span class="distance"><%= fac.distance %></span>
+<%
+}
+// different colors for score%
+// 'progress-success'
+// 'progress-warning'
+// 'progress-danger'
+var colorClass = 'progress-success'
+%>
+<div class="progress <%= colorClass %>"><div class="bar" style="width: <%= fac.latest_score%>%"></div></div>
+<% if(display_address){ %>
+<address><%= fac.address %></address>
+<% } %>
+</a>
