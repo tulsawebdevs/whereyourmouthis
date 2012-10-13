@@ -5,9 +5,20 @@ import requests
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.generic import TemplateView
 
 from inspections.forms import FacilityImportForm
-from inspections.models import Facility
+from inspections.models import Facility, Load
+
+
+class AppCacheTemplateView(TemplateView):
+    def render_to_response(self, context, **response_kwargs):
+        response_kwargs['mimetype'] = 'text/cache-manifest'
+        cities = Facility.objects.values('city').distinct()
+        last_load = Load.objects.latest()
+        return super(TemplateView, self).render_to_response(
+            {'cities': cities, 'last_load': last_load},
+            **response_kwargs)
 
 def import_facility(request):
     form = FacilityImportForm(request.POST, request.FILES)
@@ -80,6 +91,9 @@ def load(request):
                     facility.save()
                 except:
                     pass
+            # create a load object for the timestamp
+            l = Load.objects.create()
+            l.save()
 
     context = {'import_file_form': form, }
     return render_to_response('admin/inspections/load_data_form.html',

@@ -1,0 +1,6 @@
+CACHE MANIFEST
+# {{ last_load.load_datetime|date:"r" }}
+
+CACHE:
+{% for city in cities %}{{ city.city|lower }}.json
+{% endfor %}

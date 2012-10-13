@@ -6,8 +6,8 @@ from tastypie.api import Api
 
 from inspections.api import (FacilityResource, InspectionResource,
                              ViolationResource)
-from inspections.views import region, region_json, load as iv_load
-from home.views import HomeIndexView
+from inspections.views import (region, region_json, AppCacheTemplateView,
+                               load as iv_load)
 
 
 admin.autodiscover()
@@ -20,12 +20,15 @@ v1_api.register(ViolationResource())
 urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/docs', TemplateView.as_view(template_name="api_docs.html"),
-        name="api_docs"),
     url(r'^api/', include(v1_api.urls)),
-    url(r'^$', HomeIndexView.as_view(), name="home"),
+    url(r'^$', TemplateView.as_view(template_name="home/index.html"),
+        name="home"),
+    url(r'^location/(\d+)/?',
+        TemplateView.as_view(template_name="home/index.html"),
+        name="home"),
     url(r'^inspections/load/?$', iv_load, name='inspections_load'),
-    url(r'^(?P<region>\w+).json$', region_json, name="region_json"),
     url(r'^region$', region, name='region'),
-    url(r'^location/(\d+)/?', HomeIndexView.as_view(), name="home"),
+    url(r'^(?P<region>\w+).json$', region_json, name="region_json"),
+    url(r'^wymi.appcache', AppCacheTemplateView.as_view(
+        template_name="appcache.txt"), name="appcache")
 )
