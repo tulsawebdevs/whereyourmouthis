@@ -1,6 +1,8 @@
 import StringIO
 import csv
+import requests
 
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -19,6 +21,14 @@ def import_facility(request):
     context = {'form': form, 'success': success}
     return render_to_response("imported.html", context,
                               context_instance=RequestContext(request))
+
+def region(request):
+    lat = request.GET.get('lat', '')
+    lng = request.GET.get('lng', '')
+    boundary_url = 'http://www.oklahomadata.org/boundary/1.0/boundary/?contains=%s,%s&sets=counties'
+    resp = requests.get(boundary_url % (lat, lng ))
+    slug = resp.json['objects'][0]['slug']
+    return HttpResponse("/%s.json" % slug)
 
 
 def load(request):
