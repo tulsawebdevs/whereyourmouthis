@@ -1,95 +1,98 @@
-define([
-  // Libraries.
-  "jquery",
-  "lodash",
-  "backbone",
 
-  // Plugins.
-  "plugins/backbone.layoutmanager"
-],
-
-function($, _, Backbone) {
-
-  // Provide a global location to place configuration settings and module
-  // creation.
-  var app = {
-    // The root path to run the application.
-    root: "/"
+define(["jquery", "lodash", "backbone", "plugins/backbone.layoutmanager"], function($, _, Backbone) {
+  var JST, app;
+  app = {
+    api: {
+      regionEndPoint: '/region',
+      startPoint: '/api/v1/'
+    },
+    regionFile: null,
+    root: "/",
+    locationOpt: {
+      maximumAge: 60 * 60 * 100,
+      timeout: 3000
+    }
   };
-
-  // Localize or create a new JavaScript Template object.
-  var JST = window.JST = window.JST || {};
-
-  // Configure LayoutManager with Backbone Boilerplate defaults.
+  JST = window.JST = window.JST || {};
   Backbone.LayoutManager.configure({
-    // Allow LayoutManager to augment Backbone.View.prototype.
     manage: true,
-
     paths: {
       layout: "static/app/templates/layouts/",
       template: "static/app/templates/"
     },
-
     fetch: function(path) {
-      // Initialize done for use in async-mode
       var done;
-
-      // Concatenate the file extension.
+      done = void 0;
       path = path + ".html";
-
-      // If cached, use the compiled template.
       if (JST[path]) {
         return JST[path];
       } else {
-        // Put fetch into `async-mode`.
         done = this.async();
-
-        // Seek out the template asynchronously.
-        return $.ajax({ url: app.root + path }).then(function(contents) {
-          done(JST[path] = _.template(contents));
+        return $.ajax({
+          url: app.root + path
+        }).then(function(contents) {
+          return done(JST[path] = _.template(contents));
         });
       }
     }
   });
-
-  // Mix Backbone.Events, modules, and layout management into the app object.
-  return _.extend(app, {
-    // Create a custom object with a nested Views object.
+  _.extend(app, {
     module: function(additionalProps) {
-      return _.extend({ Views: {} }, additionalProps);
+      return _.extend({
+        Views: {}
+      }, additionalProps);
     },
-
-    // Helper for using layouts.
     useLayout: function(name, options) {
-      // If already using this Layout, then don't re-inject into the DOM.
+      var layout;
       if (this.layout && this.layout.options.template === name) {
         return this.layout;
       }
-
-      // If a layout already exists, remove it from the DOM.
       if (this.layout) {
         this.layout.remove();
       }
-
-      // Create a new Layout with options.
-      var layout = new Backbone.Layout(_.extend({
+      layout = new Backbone.Layout(_.extend({
         template: name,
         className: "layout " + name,
         id: "layout"
       }, options));
-
-      // Insert into the DOM.
       $("#main").empty().append(layout.el);
-
-      // Render the layout.
       layout.render();
-
-      // Cache the refererence.
       this.layout = layout;
-
-      // Return the reference, for chainability.
       return layout;
+    },
+    fetchLocation: function() {
+      var def;
+      def = $.Deferred();
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          return def.resolve(pos);
+        }, function(err) {
+          return def.reject(err);
+        }, this.locationOpt);
+      } else {
+        console.error('location services not supported in this browser');
+        def.reject();
+      }
+      return def;
+    },
+    fetchRegion: function() {
+      var _this = this;
+      return this.fetchLocation().done(function(pos) {
+        return $.ajax({
+          url: _this.api.regionEndPoint,
+          method: 'get',
+          data: {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          }
+        }).error(function(resp, type) {
+          return _this.trigger('regionFileUpdate', new Error('unable to retrieve region file location'), _this.regionFile);
+        }).success(function(resp) {
+          _this.regionFile = resp;
+          return _this.trigger('regionFileUpdate', null, resp);
+        });
+      });
     }
   }, Backbone.Events);
-
+  return app;
 });
