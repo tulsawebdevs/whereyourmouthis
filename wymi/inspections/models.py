@@ -34,6 +34,13 @@ class Facility(models.Model):
         unique_together = (("name", "address"),)
 
 
+class Load(models.Model):
+    load_datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        get_latest_by = "load_datetime"
+
+
 class Inspection(models.Model):
     facility = models.ForeignKey('Facility', related_name='inspections')
     date = models.DateField()
