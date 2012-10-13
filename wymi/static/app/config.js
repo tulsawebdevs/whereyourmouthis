@@ -14,6 +14,7 @@ require.config({
     jquery: "../js/libs/jquery",
     lodash: "../js/libs/lodash",
     backbone: "../js/libs/backbone"
+    bootstrap: "../js/libs/bootstrap"
   },
 
   shim: {
