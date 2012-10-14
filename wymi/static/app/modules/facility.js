@@ -1,5 +1,5 @@
 
-define(["app", "backbone"], function(app, Backbone) {
+define(["app", "backbone", "plugins/backbone.subset"], function(app, Backbone) {
   var Facility;
   Facility = app.module();
   Facility.Model = Backbone.Model.extend({
@@ -7,8 +7,6 @@ define(["app", "backbone"], function(app, Backbone) {
       address: 'nowhere',
       city: 'someplace',
       state: 'Not OK',
-      latitude: '',
-      longitude: '',
       distance: null,
       name: '',
       type: '',
@@ -17,12 +15,30 @@ define(["app", "backbone"], function(app, Backbone) {
       "address": '',
       zip_code: ''
     },
-    initialize: function() {},
     url: function() {
       return "" + app.api.startPoint + "facility/" + this.id + "/?format=json";
     },
     parse: function(res) {
       return res;
+    },
+    getDistance: function(pos) {
+      var R, a, c, dLat, dist, dlng, lat1, lat2, lng1, lng2;
+      R = 3961;
+      lat1 = parseInt(this.get('lat'));
+      lng1 = parseInt(this.get('lng'));
+      lat2 = pos.coords.latitude;
+      lng2 = pos.coords.longitude;
+      dLat = (lat2 - lat1) * Math.PI / 180;
+      dlng = (lng2 - lng1) * Math.PI / 180;
+      lat1 = lat1 * Math.PI / 180;
+      lat2 = lat2 * Math.PI / 180;
+      a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dlng / 2) * Math.sin(dlng / 2) * Math.cos(lat1) * Math.cos(lat2);
+      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      dist = R * c;
+      this.set('distance', Math.floor(dist), {
+        silent: true
+      });
+      return dist;
     }
   });
   Facility.Collection = Backbone.Collection.extend({
@@ -34,12 +50,20 @@ define(["app", "backbone"], function(app, Backbone) {
       return res.objects;
     }
   });
+  Facility.LocalCollection = Backbone.Subset.extend({
+    sieve: function(facility) {
+      var dist;
+      dist = facility.getDistance(app.curPos);
+      return dist <= app.localDist;
+    }
+  });
   Facility.Views.ListItem = Backbone.View.extend({
     tagName: 'li',
     template: 'facilityListItem',
     initialize: function() {
-      _.bindAll(this, 'render');
-      return this.model.on('change', this.render);
+      _.bindAll(this, 'render', 'remove');
+      this.model.on('change', this.render);
+      return this.model.on('destroy', this.remove);
     },
     serialize: function() {
       return {
@@ -60,6 +84,7 @@ define(["app", "backbone"], function(app, Backbone) {
     initialize: function() {
       _.bindAll(this, 'render', 'refreshLocation');
       this.collection.bind('reset', this.render);
+      this.collection.bind('change', this.render);
     },
     serialize: function() {
       return {
@@ -68,11 +93,13 @@ define(["app", "backbone"], function(app, Backbone) {
     },
     beforeRender: function() {
       var _this = this;
-      return this.collection.each(function(facility) {
-        return _this.insertView('.facility-list', new Facility.Views.ListItem({
-          model: facility
-        }));
-      });
+      if (this.collection) {
+        return this.collection.each(function(facility) {
+          return _this.insertView('.facility-list', new Facility.Views.ListItem({
+            model: facility
+          }));
+        });
+      }
     },
     refreshLocation: function() {
       var _this = this;

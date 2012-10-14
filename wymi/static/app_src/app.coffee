@@ -1,7 +1,7 @@
 define [
   # Libraries.
   "jquery"
-  "lodash"
+  "underscore"
   "backbone"
   # Plugins.
   "plugins/backbone.layoutmanager"
@@ -17,6 +17,7 @@ define [
       startPoint: '/api/v1/'
     regionFile: null
     root: "/"
+    localDist: 12 # what distance is considered local?
     locationOpt:
       maximumAge: 60 * 60 * 100
       timeout: 3000
@@ -96,12 +97,13 @@ define [
       def = $.Deferred()
       # MAYBE: popup confirmation dialog explaining why we need their location?
       if (navigator.geolocation)
-        navigator.geolocation.getCurrentPosition (pos) ->
+        navigator.geolocation.getCurrentPosition (pos) =>
+          @curPos = pos
           def.resolve(pos)
         , (err) ->
           # TODO: this doesn't fire when you cancel the location lookup
           # probably only on a gps/location lookup error, :(
-          def.reject(err)
+          if not @curPos then def.reject(err) else def.resolve(@curPos)
         , @locationOpt
       else
         console.error 'location services not supported in this browser'
@@ -122,7 +124,7 @@ define [
           @trigger 'regionFileUpdate', new Error('unable to retrieve region file location'), @regionFile
         ).success( (resp) =>
           @regionFile = resp
-          @trigger 'regionFileUpdate', null, resp
+          @trigger 'regionFileUpdate', null, @regionFile
         )
       
   , Backbone.Events

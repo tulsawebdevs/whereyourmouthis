@@ -7,20 +7,39 @@ define [
   # Defining the application router, you can attach sub routers here.
   Router = Backbone.Router.extend
     routes:
-      "": "index"
+      "": "loadRegion"
+      "old": "index"
       "location/:id": "single"
 
     initialize: () ->
-      app.facilities = new Facility.Collection
       
-      app.on 'regionFileUpdate', (err, file) ->
-        throw err if err
-        app.facilities.fetch
+      app.regionCollection = new Facility.Collection
+      Temp = Facility.LocalCollection.extend
+        parent: app.regionCollection
+      app.localFacilities = new Temp()
+      
+      app.on 'regionFileUpdate', (err, file) =>
+        app.regionCollection.fetch
           url: file
+          success: ->
+            app.localFacilities.recalculate()
+            # app.localFacilities.trigger('change')
       
       return
-
+    
+    loadRegion: () ->
+      main = app.useLayout 'index'
+      main.setViews
+        '.left': new Facility.Views.List
+          collection: app.localFacilities
+        # '.map': new 
+      
+      # get region
+      if not app.regionFile
+        app.fetchRegion()
+    
     index: () ->
+      app.facilities = new Facility.Collection
       main = app.useLayout 'index'
       console.log app.facilities
       main.setViews
@@ -28,11 +47,7 @@ define [
           collection: app.facilities
         # '.map': new 
       
-      # get region
-      if not app.regionFile
-        app.fetchRegion()
-      
-      # app.facilities.fetch()
+      app.facilities.fetch()
       
     single: (id) ->
       detail = app.useLayout 'detail'
