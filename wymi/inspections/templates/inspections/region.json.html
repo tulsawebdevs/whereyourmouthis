@@ -1,7 +1,8 @@
 {% spaceless %}
-[
+{"objects":[
 {% for facility in facilities %}
-  {"name": {{ facility.name }}, "address": {{ facility.address }}, "latest_score": {{ facility.latest_score }}, "lat": {{ facility.latitude }}, "lng": {{ facility.longitude }} },
+  {"name": "{{ facility.name }}", "address": "{{ facility.address }}", "latest_score": {{ facility.latest_score }}, "lat": "{{ facility.latitude }}", "lng": "{{ facility.longitude }}" }
+{% if not forloop.last %},{% endif %}
 {% endfor %}
-]
+]}
 {% endspaceless %}

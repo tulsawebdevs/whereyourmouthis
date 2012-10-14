@@ -1,6 +1,7 @@
 define [
   "app"
   "backbone"
+  "plugins/backbone.subset"
 ], (app, Backbone) ->
 
   Facility = app.module()
@@ -11,8 +12,6 @@ define [
       address: 'nowhere'
       city: 'someplace'
       state: 'Not OK'
-      latitude: ''
-      longitude: ''
       distance: null
       name: ''
       type: ''
@@ -21,17 +20,41 @@ define [
       "address": ''
       zip_code: ''
     
-    initialize: () ->
+    # initialize: () ->
     
     url: () ->
       return "#{app.api.startPoint}facility/#{@id}/?format=json"
     
     parse: (res) ->
       return res
+    
+    getDistance: (pos) ->
+      # pulled from okletsgo
+      R = 3961 # miles
+      lat1 = parseInt @get('lat')
+      lng1 = parseInt @get('lng')
+      lat2 = pos.coords.latitude
+      lng2 = pos.coords.longitude
+      
+      dLat = (lat2-lat1) * Math.PI / 180
+      dlng = (lng2-lng1) * Math.PI / 180
+      lat1 = lat1 * Math.PI / 180
+      lat2 = lat2 * Math.PI / 180
+
+      a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dlng/2) * Math.sin(dlng/2) * Math.cos(lat1) * Math.cos(lat2)
+
+      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+      dist = R * c
+      @set('distance', Math.floor(dist), {silent: true})
+      return dist
 
 
   Facility.Collection = Backbone.Collection.extend
     model: Facility.Model
+    
+    # initialize: () ->
+    #   console.log 'init collection'
     
     url: () ->
       return "#{app.api.startPoint}facility/?format=json&order_by=-latest_score"
@@ -40,21 +63,23 @@ define [
       return res.objects
 
 
+  Facility.LocalCollection = Backbone.Subset.extend
+    # initilize: (options) ->
+      
+    sieve: (facility) ->
+      dist = facility.getDistance(app.curPos)
+      return dist <= app.localDist
+
   Facility.Views.ListItem = Backbone.View.extend
     tagName: 'li'
   
     template: 'facilityListItem'
   
-    # events: 
-    #   "click": "viewDetail"
-  
     initialize: () ->
-      _.bindAll(@, 'render')
-      @model.on 'change', @render
-    #   @model.bind('destroy', @remove)
+      _.bindAll(@, 'render', 'remove')
       
-    # viewDetail: () ->
-      # console.log "viewing detail #{@model.id}"
+      @model.on 'change', @render
+      @model.on 'destroy', @remove
       
     serialize: () ->
       return {
@@ -79,6 +104,7 @@ define [
       
       # @collection.bind('add', @render)
       @collection.bind('reset', @render)
+      @collection.bind('change', @render)
       # @collection.bind('all', @render)
     
       # @refreshLocation()
@@ -90,9 +116,10 @@ define [
       }
 
     beforeRender: () ->
-      @collection.each (facility) =>
-        @insertView '.facility-list', new Facility.Views.ListItem
-          model: facility
+      if @collection
+        @collection.each (facility) =>
+          @insertView '.facility-list', new Facility.Views.ListItem
+            model: facility
     
     # afterRender: () ->
       # @$el.find('.refresh').button('loading');

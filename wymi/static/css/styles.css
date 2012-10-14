@@ -63,8 +63,9 @@ body{
   line-height: 24px;
 }
 
-.facility-list .score{
+.facility-list .label{
 	float: right;
+  margin-left: 5px;
 }
 
 .facility-list a{
