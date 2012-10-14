@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
+from django.conf import settings
 from django.contrib import admin
 from django.views.generic import TemplateView
 
@@ -31,4 +32,9 @@ urlpatterns = patterns('',
     url(r'^(?P<region>\w+).json$', region_json, name="region_json"),
     url(r'^wymi.appcache', AppCacheTemplateView.as_view(
         template_name="appcache.txt"), name="appcache")
+)
+
+urlpatterns += patterns('',
+    url(r'^static/<?P<path>.*)$', 'django.views.static.server',
+        {'document_root': settings.STATIC_ROOT}),
 )
