@@ -1,8 +1,10 @@
 import StringIO
 import csv
+import logging
 import requests
 
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import (HttpResponse, HttpResponseBadRequest,
+                        HttpResponseNotFound)
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import TemplateView
@@ -36,10 +38,14 @@ def import_facility(request):
 def region(request):
     lat = request.GET.get('lat', '')
     lng = request.GET.get('lng', '')
+    logging.error("lat: %s, lng: %s" % (lat, lng))
     if not lat or not lng:
         return HttpResponseBadRequest("lat and lng are both required ... to be spelled right.")
     boundary_url = 'http://www.oklahomadata.org/boundary/1.0/boundary/?contains=%s,%s&sets=counties'
+    logging.error("boundary_url: %s" % boundary_url % (lat, lng))
     resp = requests.get(boundary_url % (lat, lng ))
+    if resp.json['meta']['total_count'] == 0:
+        return HttpResponseNotFound("No region found for %s, %s" % (lat, lng))
     slug = resp.json['objects'][0]['name'].lower()
     return HttpResponse("/%s.json" % slug)
 
